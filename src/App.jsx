@@ -15,12 +15,13 @@ export default function App() {
   const [unfinished, setUnfinished] = useState(0);
 
   const handleAddTodo = () => {
-    const newTodo = {
-      index: todos.length + 1,
-      name: todoName,
-      status: "unfinished",
-    };
-    if (!todos.includes(newTodo)) {
+    const check = todos.filter((todo) => todo.name == todoName)[0];
+
+    if (!check) {
+      const newTodo = {
+        name: todoName,
+        status: "unfinished",
+      };
       const allTodos = [newTodo, ...todos];
       setTodos(allTodos);
       setTodoName("");
@@ -30,20 +31,25 @@ export default function App() {
     }
   };
   const handleEdit = () => {
-    let newTodos = [];
-    todos.map((todo) => {
-      if (todo.name == editmodeName) {
-        todo.name = todoName;
+    const check = todos.filter((todo) => todo.name == todoName)[0];
+    if (!check) {
+      let newTodos = [];
+      todos.map((todo) => {
+        if (todo.name == editmodeName) {
+          todo.name = todoName;
 
-        newTodos.push(todo);
-      } else {
-        newTodos.push(todo);
-      }
-    });
-    setTodoName("");
-    setEditmodeName("");
-    setEditmode(false);
-    setTodos(newTodos);
+          newTodos.push(todo);
+        } else {
+          newTodos.push(todo);
+        }
+      });
+      setTodoName("");
+      setEditmodeName("");
+      setEditmode(false);
+      setTodos(newTodos);
+    } else {
+      alert("New name cant be the same with other todos");
+    }
   };
   const handleDeleteTodo = (name) => {
     const thistodo = todos.filter((todo) => todo.name == name)[0];
@@ -121,7 +127,7 @@ export default function App() {
 
         {todos && (
           <div className="">
-            {todos.map((todo) => (
+            {todos.map((todo, index) => (
               <div
                 className={`${
                   todo.status === "unfinished"
